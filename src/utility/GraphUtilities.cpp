@@ -7,9 +7,7 @@
 
 using namespace std;
 
-map<int, int> ages;
-
-Graph GetGraphFromFile(string teamFile)
+Graph GetGraphFromFile(string sudokuFile)
 {	
 	string line;	
 	ifstream inFile;
@@ -17,7 +15,7 @@ Graph GetGraphFromFile(string teamFile)
 	list<map<string, list<int>>> commands;
 	Graph graph;
 	
-	inFile.open("datasets/" + teamFile);	
+	inFile.open("datasets/" + sudokuFile);	
 
 	if (!inFile) {
         cout << "Não foi possível abrir o arquivo";
@@ -40,7 +38,6 @@ Graph GetGraphFromFile(string teamFile)
 			int age, index=0;			
 			while (s >> age) 
 			{
-				ages[index] = age;
 				index++;
 			}	
 		}
@@ -70,8 +67,40 @@ Graph GetGraphFromFile(string teamFile)
 
 	inFile.close();	
 
-	//Adicionar dicionario de idades e lista de comandos no grafo	
-	graph.Alter(commands, ages);
-
 	return graph;
+}
+
+void GreedyColoring(Graph graph)
+{
+	int result[graph.V]; 
+
+	for (int u = 1; u < graph.V; u++) 
+        result[u] = -1; 
+
+	bool available[graph.V]; 
+    for (int cr = 0; cr < graph.V; cr++) 
+        available[cr] = false; 
+
+    for (int u = 1; u < graph.V; u++) 
+    {
+        list<int>::iterator i; 
+        for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
+            if (result[*i] != -1) 
+                available[result[*i]] = true; 
+  
+        int cr; 
+        for (cr = 0; cr < graph.V; cr++) 
+            if (available[cr] == false) 
+                break; 
+  
+        result[u] = cr; 
+  
+        for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
+            if (result[*i] != -1) 
+                available[result[*i]] = false; 
+    } 
+
+    for (int u = 0; u < graph.V; u++) 
+        cout << "Vertex " << u << " --->  Color "
+             << result[u] << endl;	
 }

@@ -6,6 +6,8 @@
 
 using namespace std;
 
-Graph GetGraphFromFile(string equipeFile);
+Graph GetGraphFromFile(string sudokuFile);
+
+void GreedyColoring(Graph graph);
 
 #endif
