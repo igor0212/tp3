@@ -1,9 +1,6 @@
 #include <list>
 #include <string>
-#include <map>
 #include ".\Graph.hpp"
-#include <iostream>
-#include <sstream> 
 
 using namespace std;
 

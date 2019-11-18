@@ -6,7 +6,6 @@
 
 using namespace std;
 
-void Tasks(Graph graph);
 void StartTP3(string sudokuFile);
 
 #endif
