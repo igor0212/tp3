@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <list>
-#include <map>
+#include <vector>
 #include <Graph.hpp>
 
 using namespace std;
@@ -13,6 +12,7 @@ Graph GetGraphFromFile(string sudokuFile)
 	ifstream inFile;
 	int N, I, J, counter=1;	
 	Graph graph;
+    vector<int> vertices;
 	
 	inFile.open("datasets/" + sudokuFile);	
 
@@ -27,11 +27,21 @@ Graph GetGraphFromFile(string sudokuFile)
 		istringstream s(line);		
 		if (counter == 1)
 		{  
-			//Armazenando primeira linha: tamanho da tabela do Sudoku, quantidade de colunas
+			// Armazenando primeira linha: tamanho da tabela do Sudoku, quantidade de colunas
 			// e quantidade de linhas
     		if (!(s >> N >> I >> J)) { break; }	
-			graph.Create(N);
+			graph.Create(N*N);
 		}
+        else
+        {
+            // Armazenando sudoku no vetor
+            int verticeAux;
+            for(int i = 0; i < N; i++)
+            {
+                if (!(s >> verticeAux)) { break; }
+                vertices.push_back(verticeAux);
+            }
+        }
 
 		counter++;
 	}
