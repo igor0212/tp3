@@ -169,7 +169,7 @@ void GreedyColoring(Graph graph)
                 available[result[*i]] = false; 
     }
 
-    // Mostrar resultado do sudoku finalizado
+    // Mostrar resultado do sudoku resolvido
     for (int u = 0; u < graph.V; u++)     
     {    
         //cout << result[u] << " ";
