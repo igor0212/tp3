@@ -7,6 +7,8 @@
 
 using namespace std;
 
+vector<vector<int>> GetRegions(vector<vector<int>> vertices, int N, int I, int J);
+
 Graph AddEdge(Graph graph, vector<vector<int>> vertices, int N, int I, int J);
 
 Graph GetGraphFromFile(string sudokuFile);
