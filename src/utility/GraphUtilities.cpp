@@ -21,7 +21,7 @@ void AddColumn(Graph graph, int N)
 
     vector<int> incorrectRegion;    
 
-    for(int i=0; i < graph.sudokuTable.size(); i++)
+    for(int i=0; i < graph.vertices.size(); i++)
     {
         if(Contains(vectorAux, i))                    
             continue;     
@@ -66,7 +66,7 @@ void AddRow(Graph graph, int N)
 {
     vector<vector<int>> regions;
     vector<int> region;
-    for(int i=0; i < graph.sudokuTable.size(); i++)
+    for(int i=0; i < graph.vertices.size(); i++)
     {
         int idxAux = i+1;               
         region.push_back(i);        
@@ -95,7 +95,7 @@ void AddRegion(Graph graph, int N, int I)
 
     vector<int> incorrectRegion;    
 
-    for(int i=0; i < graph.sudokuTable.size(); i++)
+    for(int i=0; i < graph.vertices.size(); i++)
     {
         if(Contains(vectorAux, i))                    
             continue;     
@@ -182,7 +182,7 @@ Graph GetGraphFromFile(string sudokuFile)
             {
                 if (!(s >> verticeAux)) { break; }
                 verticesRow.push_back(verticeAux);
-                graph.sudokuTable.push_back(verticeAux);                
+                graph.vertices.push_back(verticeAux);                
             }            
         }
 
@@ -209,8 +209,8 @@ void GreedyColoring(Graph graph)
     {         
         list<int>::iterator i; 
         for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (graph.sudokuTable[*i] != 0) 
-                available[graph.sudokuTable[*i]] = true; 
+            if (graph.vertices[*i] != 0) 
+                available[graph.vertices[*i]] = true; 
   
         int cr; 
         for (cr = 1; cr < aux; cr++){
@@ -219,28 +219,20 @@ void GreedyColoring(Graph graph)
             }  
         }
   
-        graph.sudokuTable[u] = cr;       
+        graph.vertices[u] = cr;       
         for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (graph.sudokuTable[*i] != 0) 
-                available[graph.sudokuTable[*i]] = false; 
+            if (graph.vertices[*i] != 0) 
+                available[graph.vertices[*i]] = false; 
     }   
 
     int u = 0;
+    cout << "solucao \n";
     for(int i = 0; i < graph.V; i++){
-        cout << graph.sudokuTable[i] << " ";
+        cout << graph.vertices[i] << " ";
         u++;
         if(u == sqrt(graph.V)){
             cout << endl;
             u = 0;
         }
     }
-
-    // for (int v = 0; v < graph.V; ++v) 
-    // { 
-    //     cout << "\n Adjacency list of vertex "
-    //          << v << "\n head "; 
-    //     for (auto x : graph.adj[v]) 
-    //        cout << "-> " << x; 
-    //     printf("\n"); 
-    // }
 }
