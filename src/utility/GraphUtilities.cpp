@@ -3,88 +3,146 @@
 #include <sstream>
 #include <vector>
 #include <Graph.hpp>
+#include <math.h>
+#include <algorithm>
 
 using namespace std;
 
-vector<vector<int>> GetRegions(vector<vector<int>> vertices, int N, int I, int J)
+bool Contains(vector<int> vector, int element)
+{    
+    std::vector<int>::iterator it;
+    it = find (vector.begin(), vector.end(), element); 
+    return it != vector.end();
+}
+
+void AddColumn(Graph graph, int N)
 {
-    vector<vector<int>> regions;
-    vector<vector<int>> incorrect_regions;
-    int minColumn = 0;
-    int maxColumn = J;
+    vector<int> vectorAux;
 
-    // Separando regiões pela coluna
-    while(minColumn <= N)
+    vector<int> incorrectRegion;    
+
+    for(int i=0; i < graph.sudokuTable.size(); i++)
     {
-        vector<int> incorrect_region;
+        if(Contains(vectorAux, i))                    
+            continue;     
 
-        for(int i=0; i < N; i++)
-            for(int j=0; j < N; j++)            
-            {                
-                int column = j+1;
-                if(column > minColumn && column <= maxColumn)                
-                    incorrect_region.push_back(vertices[i][j]);
-            }        
-
-        minColumn += J;
-        maxColumn += J;    
-
-        if(incorrect_region.size() > 0)
-            incorrect_regions.push_back(incorrect_region);        
-    }
-
-    // Separando regiões pela linha      
-    for(int i=0; i < incorrect_regions.size(); i++)
-    {
-        vector<int> incorrect_region = incorrect_regions[i];
-        
-        int minRow = 0;
-        int maxRow = N;
-
-        while(maxRow <= incorrect_region.size())
-        {
-            vector<int> region;
-
-            for(int j=0; j < incorrect_region.size(); j++)   
-            {
-                int row = j+1;
-                if(row > minRow && row <= maxRow)                
-                    region.push_back(incorrect_region[j]);                             
-            }            
-
-            minRow += N;
-            maxRow += N;
-
-            if(region.size() > 0)
-                regions.push_back(region);        
+        int counterColumn = 1;
+        int idxColumn = i;
+        while (counterColumn <= N)
+        {               
+            vectorAux.push_back(idxColumn);               
+            incorrectRegion.push_back(idxColumn);
+            idxColumn += N;  
+            counterColumn++;          
         }        
     }
 
-    return regions;
-}
+    vector<vector<int>> regions;
+    vector<int> region;
+    for(int i=0; i < incorrectRegion.size(); i++)
+    {
+        int idxAux = i+1;               
+        region.push_back(incorrectRegion[i]);        
 
+        if(idxAux % N == 0)
+        {
+            regions.push_back(region);
+            region.clear();
+        }
+    }
 
-Graph AddEdge(Graph graph, vector<vector<int>> vertices, int N, int I, int J)
-{
-    // Adicionando linhas ao sudoku
-    for(int i=0; i < N; i++)    
-        for(int j=0; j < N-1; j++)            
-            graph.AddEdge(vertices[i][j], vertices[i][j+1]);
-
-    // Adicionando colunas ao sudoku
-    for(int i=0; i < N-1; i++)
-        for(int j=0; j < N; j++)            
-            graph.AddEdge(vertices[i][j], vertices[i+1][j]);
-
-    // Adicionando quadrantes ao sudoku 
-    vector<vector<int>> regions = GetRegions(vertices, N, I, J);    
-    for(int i=0; i < regions.size(); i++)    
+    for(int i=0; i < regions.size(); i++)  
     {
         vector<int> region = regions[i];
 
         for(int j=0; j < region.size()-1; j++)
-            graph.AddEdge(region[j], region[j+1]);        
-    }        
+            for(int k=0; k < region.size(); k++)            
+                if(j != k && k > j)
+                    graph.AddEdge(region[j], region[k]);  
+    }
+}
+
+void AddRow(Graph graph, int N)
+{
+    vector<vector<int>> regions;
+    vector<int> region;
+    for(int i=0; i < graph.sudokuTable.size(); i++)
+    {
+        int idxAux = i+1;               
+        region.push_back(i);        
+
+        if(idxAux % N == 0)
+        {            
+            regions.push_back(region);
+            region.clear();
+        }
+    }
+
+    for(int i=0; i < regions.size(); i++)  
+    {
+        vector<int> region = regions[i];
+
+        for(int j=0; j < region.size()-1; j++)
+            for(int k=0; k < region.size(); k++)            
+                if(j != k && k > j)
+                    graph.AddEdge(region[j], region[k]);  
+    }
+}
+
+void AddRegion(Graph graph, int N, int I)
+{
+    vector<int> vectorAux;
+
+    vector<int> incorrectRegion;    
+
+    for(int i=0; i < graph.sudokuTable.size(); i++)
+    {
+        if(Contains(vectorAux, i))                    
+            continue;     
+
+        int counterColumn = 1;
+        int idxColumn = i;
+        while (counterColumn <= I)
+        {   
+            vectorAux.push_back(idxColumn);               
+            incorrectRegion.push_back(idxColumn);
+            idxColumn += N;  
+            counterColumn++;          
+        }
+    }
+
+    vector<vector<int>> regions;
+    vector<int> region;
+    for(int i=0; i < incorrectRegion.size(); i++)
+    {
+        int idxAux = i+1;               
+        region.push_back(incorrectRegion[i]);        
+
+        if(idxAux % N == 0)
+        {
+            regions.push_back(region);
+            region.clear();
+        }
+    }
+
+    for(int i=0; i < regions.size(); i++)  
+    {
+        vector<int> region = regions[i];
+
+        for(int j=0; j < region.size()-1; j++)
+            for(int k=0; k < region.size(); k++)            
+                if(j != k && k > j)
+                    graph.AddEdge(region[j], region[k]);  
+    }
+}
+
+Graph AddEdge(Graph graph, int N, int I, int J)
+{
+    AddRegion(graph, N, I);
+
+    AddRow(graph, N);
+
+    AddColumn(graph, N);    
 
     return graph;
 }
@@ -94,8 +152,7 @@ Graph GetGraphFromFile(string sudokuFile)
 	string line;	
 	ifstream inFile;
 	int N, I, J, counter=1;	
-	Graph graph;
-    vector<vector<int>> vertices;
+	Graph graph;    
 	
 	inFile.open("datasets/" + sudokuFile);	
 
@@ -107,6 +164,7 @@ Graph GetGraphFromFile(string sudokuFile)
 	//Percorrer todo o arquivo
 	while (getline(inFile, line))
 	{	
+        int a = 0;
 		istringstream s(line);		
 		if (counter == 1)
 		{  
@@ -124,57 +182,65 @@ Graph GetGraphFromFile(string sudokuFile)
             {
                 if (!(s >> verticeAux)) { break; }
                 verticesRow.push_back(verticeAux);
-            }
-
-            vertices.push_back(verticesRow);
+                graph.sudokuTable.push_back(verticeAux);                
+            }            
         }
 
+        a++;
 		counter++;
-	}
+	}    
 
 	inFile.close();	
 
-    graph = AddEdge(graph, vertices, N, I, J);    
+    graph = AddEdge(graph, N, I, J);    
 
 	return graph;
 }
 
 void GreedyColoring(Graph graph)
-{
-	int result[graph.V]; 
-
-	for (int u = 1; u < graph.V; u++) 
-        result[u] = -1; 
-
-	bool available[graph.V]; 
-    for (int cr = 0; cr < graph.V; cr++) 
-        available[cr] = false; 
-
-    for (int u = 1; u < graph.V; u++) 
-    {
+{	 
+    int aux = sqrt(graph.V);
+    bool available[aux]; 
+    for (int cr = 0; cr < aux; cr++) {
+        available[cr] = false;
+    }  
+    
+    for (int u = 0; u < graph.V; u++) 
+    {         
         list<int>::iterator i; 
         for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (result[*i] != -1) 
-                available[result[*i]] = true; 
+            if (graph.sudokuTable[*i] != 0) 
+                available[graph.sudokuTable[*i]] = true; 
   
         int cr; 
-        for (cr = 0; cr < graph.V; cr++) 
-            if (available[cr] == false) 
-                break; 
+        for (cr = 1; cr < aux; cr++){
+            if (available[cr] == false){
+                break;
+            }  
+        }
   
-        result[u] = cr; 
-  
+        graph.sudokuTable[u] = cr;       
         for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (result[*i] != -1) 
-                available[result[*i]] = false; 
+            if (graph.sudokuTable[*i] != 0) 
+                available[graph.sudokuTable[*i]] = false; 
+    }   
+
+    int u = 0;
+    for(int i = 0; i < graph.V; i++){
+        cout << graph.sudokuTable[i] << " ";
+        u++;
+        if(u == sqrt(graph.V)){
+            cout << endl;
+            u = 0;
+        }
     }
 
-    // Mostrar resultado do sudoku resolvido
-    for (int u = 0; u < graph.V; u++)     
-    {    
-        //cout << result[u] << " ";
-
-        if ((u+1) % 4 == 0)
-            cout << "\n";
-    }
+    // for (int v = 0; v < graph.V; ++v) 
+    // { 
+    //     cout << "\n Adjacency list of vertex "
+    //          << v << "\n head "; 
+    //     for (auto x : graph.adj[v]) 
+    //        cout << "-> " << x; 
+    //     printf("\n"); 
+    // }
 }

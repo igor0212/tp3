@@ -13,5 +13,5 @@ void StartTP3(string sudokuFile)
 	Graph graph = GetGraphFromFile(sudokuFile);
 
 	// Realizar o sudoku
-	GreedyColoring(graph);
+	GreedyColoring(graph);	
 }

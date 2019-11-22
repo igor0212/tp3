@@ -7,9 +7,15 @@
 
 using namespace std;
 
-vector<vector<int>> GetRegions(vector<vector<int>> vertices, int N, int I, int J);
+bool Contains(vector<int> vector, int element);
 
-Graph AddEdge(Graph graph, vector<vector<int>> vertices, int N, int I, int J);
+void AddColumn(Graph graph, int N);
+
+void AddRow(Graph graph, int N);
+
+void AddRegion(Graph graph, int N, int I);
+
+Graph AddEdge(Graph graph, int N, int I, int J);
 
 Graph GetGraphFromFile(string sudokuFile);
 
