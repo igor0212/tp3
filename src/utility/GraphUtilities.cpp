@@ -177,12 +177,10 @@ Graph GetGraphFromFile(string sudokuFile)
         else
         {
             // Armazenando sudoku no vetor
-            int verticeAux;
-            vector<int> verticesRow;
+            int verticeAux;            
             for(int i = 0; i < N; i++)
             {
-                if (!(s >> verticeAux)) { break; }
-                verticesRow.push_back(verticeAux);
+                if (!(s >> verticeAux)) { break; }                
                 graph.vertices.push_back(verticeAux);                
             }            
         }
