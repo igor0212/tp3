@@ -18,8 +18,9 @@ bool Contains(vector<int> vector, int element)
 void AddColumn(Graph graph, int N)
 {
     vector<int> vectorAux;
-
     vector<int> incorrectRegion;    
+    vector<vector<int>> regions;
+    vector<int> region;
 
     for(int i=0; i < graph.vertices.size(); i++)
     {
@@ -36,9 +37,7 @@ void AddColumn(Graph graph, int N)
             counterColumn++;          
         }        
     }
-
-    vector<vector<int>> regions;
-    vector<int> region;
+    
     for(int i=0; i < incorrectRegion.size(); i++)
     {
         int idxAux = i+1;               
@@ -66,6 +65,7 @@ void AddRow(Graph graph, int N)
 {
     vector<vector<int>> regions;
     vector<int> region;
+
     for(int i=0; i < graph.vertices.size(); i++)
     {
         int idxAux = i+1;               
@@ -92,8 +92,9 @@ void AddRow(Graph graph, int N)
 void AddRegion(Graph graph, int N, int I)
 {
     vector<int> vectorAux;
-
     vector<int> incorrectRegion;    
+    vector<vector<int>> regions;
+    vector<int> region;
 
     for(int i=0; i < graph.vertices.size(); i++)
     {
@@ -110,9 +111,7 @@ void AddRegion(Graph graph, int N, int I)
             counterColumn++;          
         }
     }
-
-    vector<vector<int>> regions;
-    vector<int> region;
+ 
     for(int i=0; i < incorrectRegion.size(); i++)
     {
         int idxAux = i+1;               
@@ -138,10 +137,13 @@ void AddRegion(Graph graph, int N, int I)
 
 Graph AddEdge(Graph graph, int N, int I, int J)
 {
+    // Adicionando arestas para os vertices da mesma regiao
     AddRegion(graph, N, I);
 
+    // Adicionando arestas para os vertices da mesma linha
     AddRow(graph, N);
 
+    // Adicionando arestas para os vertices da mesma coluna
     AddColumn(graph, N);    
 
     return graph;
@@ -190,6 +192,7 @@ Graph GetGraphFromFile(string sudokuFile)
 
 	inFile.close();	
 
+    // Adicionando arestas aos vertices
     graph = AddEdge(graph, N, I, J);    
 
 	return graph;
