@@ -19,6 +19,4 @@ Graph AddEdge(Graph graph, int N, int I, int J);
 
 Graph GetGraphFromFile(string sudokuFile);
 
-void GreedyColoring(Graph graph);
-
 #endif

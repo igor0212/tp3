@@ -12,6 +12,11 @@ void StartTP3(string sudokuFile)
 	// Criação do grafo
 	Graph graph = GetGraphFromFile(sudokuFile);
 
-	// Realizar o sudoku
-	GreedyColoring(graph);	
+	int index = 0;
+    if(graph.Coloring(index))
+        cout << "solucao" << "\n";    
+    else
+		cout << "sem solucao" << "\n";
+
+	graph.Print();	
 }

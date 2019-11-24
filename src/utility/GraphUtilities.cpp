@@ -163,15 +163,14 @@ Graph GetGraphFromFile(string sudokuFile)
 
 	//Percorrer todo o arquivo
 	while (getline(inFile, line))
-	{	
-        int a = 0;
+	{	        
 		istringstream s(line);		
 		if (counter == 1)
 		{  
 			// Armazenando primeira linha: tamanho da tabela do Sudoku, quantidade de colunas
 			// e quantidade de linhas
     		if (!(s >> N >> J >> I)) { break; }	
-			graph.Create(N*N);
+			graph.Create(N*N, N);
 		}
         else
         {
@@ -185,8 +184,7 @@ Graph GetGraphFromFile(string sudokuFile)
                 graph.vertices.push_back(verticeAux);                
             }            
         }
-
-        a++;
+        
 		counter++;
 	}    
 
@@ -195,44 +193,4 @@ Graph GetGraphFromFile(string sudokuFile)
     graph = AddEdge(graph, N, I, J);    
 
 	return graph;
-}
-
-void GreedyColoring(Graph graph)
-{	 
-    int aux = sqrt(graph.V);
-    bool available[aux]; 
-    for (int cr = 0; cr < aux; cr++) {
-        available[cr] = false;
-    }  
-    
-    for (int u = 0; u < graph.V; u++) 
-    {         
-        list<int>::iterator i; 
-        for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (graph.vertices[*i] != 0) 
-                available[graph.vertices[*i]] = true; 
-  
-        int cr; 
-        for (cr = 1; cr < aux; cr++){
-            if (available[cr] == false){
-                break;
-            }  
-        }
-  
-        graph.vertices[u] = cr;       
-        for (i = graph.adj[u].begin(); i != graph.adj[u].end(); ++i) 
-            if (graph.vertices[*i] != 0) 
-                available[graph.vertices[*i]] = false; 
-    }   
-
-    int u = 0;
-    cout << "solucao \n";
-    for(int i = 0; i < graph.V; i++){
-        cout << graph.vertices[i] << " ";
-        u++;
-        if(u == sqrt(graph.V)){
-            cout << endl;
-            u = 0;
-        }
-    }
 }
