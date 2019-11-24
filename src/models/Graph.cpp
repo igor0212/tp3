@@ -2,7 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
-#include ".\Graph.hpp"
+#include "Graph.hpp"
 
 using namespace std;
 
